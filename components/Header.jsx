@@ -1,32 +1,26 @@
 'use client';
-import React, { useState, useEffect } from "react";
-import { Search, Menu, X, ChevronDown, Command, ArrowRight, FileText, CornerDownLeft, MapPin, Users, Calendar } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Search, Menu, X, ChevronDown, Command, ArrowRight, FileText, CornerDownLeft, MapPin, Users, Calendar, Sparkles, LayoutGrid } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from 'next/link'; 
 import { usePathname, useRouter } from 'next/navigation'; 
 
 // --- 1. PROFESSIONAL SEARCH INDEX (The "Brain") ---
 const SEARCH_INDEX = [
-  // ... (Same as before)
-  { title: "Conference Agenda & Schedule", href: "/explore", category: "Program", icon: <Calendar size={16}/>, tags: ["timing", "dates", "plan", "day 1", "day 2"] },
-  { title: "Scientific Workshops", href: "/explore#workshops", category: "Program", icon: <FileText size={16}/>, tags: ["training", "hands on", "learning"] },
-  { title: "Organizing Committee", href: "/about#committee", category: "Leadership", icon: <Users size={16}/>, tags: ["board", "team", "chairman", "secretary"] },
-  { title: "International Faculty", href: "/about#faculty", category: "Speakers", icon: <Users size={16}/>, tags: ["doctors", "professors", "guests", "experts"] },
-  { title: "Cardiac Surgery Track", href: "/personalize#cardiac", category: "Specialty", icon: <FileText size={16}/>, tags: ["heart", "cardio", "robotic cardiac", "cabg"] },
-  { title: "Robotic Urology Track", href: "/personalize#urology", category: "Specialty", icon: <FileText size={16}/>, tags: ["kidney", "prostate", "nephrectomy"] },
-  { title: "Gynecology Track", href: "/personalize#gyn", category: "Specialty", icon: <FileText size={16}/>, tags: ["women", "uterus", "hysterectomy"] },
-  { title: "General Surgery Track", href: "/personalize#general", category: "Specialty", icon: <FileText size={16}/>, tags: ["hernia", "gallbladder", "abdominal"] },
-  { title: "Venue & Location", href: "/visit/venue", category: "Visit", icon: <MapPin size={16}/>, tags: ["address", "map", "directions", "city"] },
-  { title: "Hotel Accommodations", href: "/visit/hotels", category: "Visit", icon: <MapPin size={16}/>, tags: ["stay", "rooms", "booking", "lodging"] },
-  { title: "Delegate Registration", href: "/register", category: "Action", icon: <ArrowRight size={16}/>, tags: ["sign up", "buy", "ticket", "fee"] },
-  { title: "Contact Support", href: "/contactus", category: "Support", icon: <Users size={16}/>, tags: ["help", "email", "phone"] },
+  { title: "Conference Agenda & Schedule", href: "/explore", category: "Program", icon: <Calendar size={20}/>, tags: ["timing", "dates", "plan", "day 1", "day 2"] },
+  { title: "Scientific Workshops", href: "/explore#workshops", category: "Program", icon: <FileText size={20}/>, tags: ["training", "hands on", "learning"] },
+  { title: "Organizing Committee", href: "/about#committee", category: "Leadership", icon: <Users size={20}/>, tags: ["board", "team", "chairman", "secretary"] },
+  { title: "International Faculty", href: "/about#faculty", category: "Speakers", icon: <Users size={20}/>, tags: ["doctors", "professors", "guests", "experts"] },
+  { title: "Venue & Location", href: "/visit/venue", category: "Visit", icon: <MapPin size={20}/>, tags: ["address", "map", "directions", "city"] },
+  { title: "Hotel Accommodations", href: "/visit/hotels", category: "Visit", icon: <MapPin size={20}/>, tags: ["stay", "rooms", "booking", "lodging"] },
+  { title: "Delegate Registration", href: "/register", category: "Action", icon: <ArrowRight size={20}/>, tags: ["sign up", "buy", "ticket", "fee"] },
+  { title: "Contact Support", href: "/contactus", category: "Support", icon: <Users size={20}/>, tags: ["help", "email", "phone"] },
 ];
 
 // Motion-enabled Link component
 const MotionLink = motion(Link);
 
 const navLinks = [
-  // ... (Same as before)
   { 
     name: "About SMRSC", 
     href: "/about",
@@ -73,25 +67,11 @@ const navLinks = [
       { name: "SMRSC 2024", href: "/pastevents#2024" }, 
     ]
   },
-  { 
-    name: "Personalize", 
-    href: "/personalize", 
-    subLinks: [
-      { name: "Cardiac", href: "/personalize#cardiac" },
-      { name: "Urology", href: "/personalize#urology" },
-      { name: "Thoracic", href: "/personalize#thoracic" },
-      { name: "GI/ GI Oncology", href: "/personalize#gi" },
-      { name: "Head & neck", href: "/personalize#headneck" },
-      { name: "Gynecology", href: "/personalize#gyn" },
-      { name: "Colorectal", href: "/personalize#colorectal" },
-      { name: "General Surgery", href: "/personalize#general" },
-    ]
-  },
   { name: "Contact Us", href: "/contactus" }, 
 ];
 
 // --- ANIMATION CONFIGS ---
-const premiumSpring = { type: "spring", stiffness: 400, damping: 30, mass: 1 };
+const premiumSpring = { type: "spring", stiffness: 300, damping: 30, mass: 1 }; // Smoother, Apple-like spring
 const softSpring = { type: "spring", stiffness: 120, damping: 20, mass: 0.8 };
 
 const mobileContainerVars = {
@@ -171,6 +151,7 @@ export default function Header() {
   }, []);
 
   const isActiveLink = (href) => {
+    if (!href) return false; // Safety check
     const cleanHref = href.split('#')[0];
     if (cleanHref === '/') return pathname === '/';
     return pathname.startsWith(cleanHref);
@@ -206,7 +187,7 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-x-8 flex-1 justify-center h-full">
+          <nav className="hidden lg:flex items-center gap-x-14 flex-1 justify-center h-full">
             {navLinks.map((link) => {
               const isActive = isActiveLink(link.href);
               const showLine = hoveredLink === link.name || (isActive && hoveredLink === null);
@@ -309,7 +290,7 @@ export default function Header() {
               <Search size={22} strokeWidth={2.5} />
             </motion.button>
 
-            {/* --- REGISTER BUTTON (Desktop Only) - MODIFIED FOR COMING SOON --- */}
+            {/* --- REGISTER BUTTON --- */}
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -317,7 +298,6 @@ export default function Header() {
               onHoverEnd={() => setRegisterBtnText("Register Now")}
               className="cursor-not-allowed" // Indicates it's not clickable
             >
-              {/* Replaced Link with div to prevent redirection */}
               <div 
                 className="
                   flex items-center justify-center gap-2 rounded-full 
@@ -487,26 +467,34 @@ const Separator = () => (
   </span>
 );
 
+// --- SEARCH MODAL WITH APPLE SPOTLIGHT UX (NO BLUE, ONLY GLASS) ---
 function SearchModal({ isOpen, onClose }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(0); 
   const router = useRouter();
+  
+  // Suggested Links for Empty State
+  const quickLinks = [
+    { name: "Scientific Agenda", href: "/explore", icon: <FileText size={18} /> },
+    { name: "Registration", href: "/register", icon: <Users size={18} /> },
+    { name: "Venue Map", href: "/visit/venue", icon: <MapPin size={18} /> },
+    { name: "Contact Support", href: "/contactus", icon: <Sparkles size={18} /> }
+  ];
 
+  // Reset state when opening/closing
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (isOpen) window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
-
-  useEffect(() => {
-    if (!isOpen) setTimeout(() => setQuery(""), 300);
+    if (isOpen) {
+      setTimeout(() => setQuery(""), 100);
+      setSelectedIndex(0);
+    }
   }, [isOpen]);
 
+  // Filtering Logic
   useEffect(() => {
     if (!query) {
-      setResults([]);
+      setResults(quickLinks); 
+      setSelectedIndex(0);
       return;
     }
     const lowerQuery = query.toLowerCase();
@@ -516,7 +504,32 @@ function SearchModal({ isOpen, onClose }) {
       item.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
     );
     setResults(filtered);
+    setSelectedIndex(0); 
   }, [query]);
+
+  // Keyboard Navigation
+  const handleKeyDown = (e) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev + 1) % results.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev - 1 + results.length) % results.length);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (results[selectedIndex]) {
+        // Handle both 'href' (Search Index) and 'href' (Quick Links) - standardized property
+        handleSelect(results[selectedIndex].href);
+      }
+    } else if (e.key === "Escape") {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, selectedIndex, results]);
 
   const handleSelect = (href) => {
     router.push(href);
@@ -533,102 +546,141 @@ function SearchModal({ isOpen, onClose }) {
           transition={{ duration: 0.2 }}
           className="fixed inset-0 z-[150] flex flex-col items-center pt-[15vh] px-4 font-sans"
         >
+          {/* Backdrop - darker and more blur for focus */}
           <div 
-            className="absolute inset-0 bg-[#02091A]/95 backdrop-blur-md" 
+            className="absolute inset-0 bg-black/60 backdrop-blur-md" 
             onClick={onClose}
           />
+          
+          {/* Modal Container - APPLE GLASS STYLE */}
           <motion.div 
-            initial={{ scale: 0.98, opacity: 0, y: 10 }}
+            initial={{ scale: 0.95, opacity: 0, y: 10 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.98, opacity: 0, y: 10 }}
-            transition={{ type: "spring", stiffness: 350, damping: 25 }}
+            exit={{ scale: 0.95, opacity: 0, y: 10 }}
+            transition={{ type: "spring", stiffness: 350, damping: 30 }}
             className="
-              relative w-full max-w-2xl bg-[#0B1221] 
-              border border-white/10 rounded-xl shadow-2xl 
+              relative w-full max-w-2xl 
+              bg-black/40 backdrop-blur-3xl
+              border border-white/10 rounded-2xl shadow-2xl 
               overflow-hidden flex flex-col max-h-[60vh]
+              ring-1 ring-white/5
             "
             onClick={(e) => e.stopPropagation()} 
           >
-            <div className="flex items-center gap-4 p-4 border-b border-white/5 bg-white/[0.02]">
-              <Command className="text-[#CE921B]" size={20} />
+            {/* Input Header */}
+            <div className="flex items-center gap-4 p-5 border-b border-white/10">
+              <Search className="text-white/50" size={24} strokeWidth={2} />
               <input
                 autoFocus
                 type="text"
                 placeholder="Search agenda, speakers, or venue..."
-                className="flex-1 bg-transparent text-white text-[16px] placeholder:text-white/30 outline-none font-medium"
+                className="flex-1 bg-transparent text-white text-xl placeholder:text-white/40 outline-none font-medium leading-none"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
               <button 
                 onClick={onClose} 
-                className="text-[10px] font-bold text-white/40 border border-white/10 px-2 py-1 rounded hover:bg-white/5 transition-colors"
+                className="text-[11px] font-semibold text-white/40 border border-white/10 px-2 py-1 rounded hover:bg-white/10 transition-colors"
               >
                 ESC
               </button>
             </div>
-            <div className="overflow-y-auto p-2">
+
+            {/* Content Area */}
+            <div className="overflow-y-auto p-2 scrollbar-hide">
               {query && results.length === 0 && (
-                <div className="py-8 text-center text-white/40 text-sm">
-                  <p>No matches found for "{query}"</p>
+                <div className="py-12 text-center text-white/30 text-base font-medium">
+                  <p>No results found for "{query}"</p>
                 </div>
               )}
-              <div className="flex flex-col gap-1">
-                {results.map((item, idx) => (
-                  <motion.button
-                    key={item.href + idx}
-                    initial={{ opacity: 0, x: -5 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.03 }}
-                    onClick={() => handleSelect(item.href)}
-                    className="
-                      flex items-center justify-between p-3 rounded-lg 
-                      hover:bg-white/5 transition-all group text-left
-                      border border-transparent hover:border-white/5
-                    "
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="p-2 bg-white/5 rounded-md text-white/60 group-hover:text-[#CE921B] group-hover:bg-[#CE921B]/10 transition-colors">
-                        {item.icon}
-                      </div>
-                      <div>
-                        <h4 className="text-white text-sm font-medium group-hover:text-white transition-colors">
-                          {item.title}
-                        </h4>
-                        <span className="text-[11px] uppercase tracking-wider text-white/30 font-semibold group-hover:text-white/50">
-                          {item.category}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
-                      <span className="text-[10px] text-white/30 font-medium">Jump to</span>
-                      <CornerDownLeft size={14} className="text-[#CE921B]" />
-                    </div>
-                  </motion.button>
-                ))}
+
+              {/* LIST HEADER */}
+              <div className="px-3 py-2 flex items-center justify-between">
+                <span className="text-[11px] font-semibold text-white/30 uppercase tracking-wider">
+                  {query ? "Search Results" : "Suggested"}
+                </span>
               </div>
-              {!query && (
-                <div className="p-4">
-                  <p className="text-[10px] font-bold text-white/20 uppercase tracking-[2px] mb-3">Quick Navigation</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {["Scientific Agenda", "Registration", "Venue Map", "Contact Support"].map(tag => (
-                      <button 
-                        key={tag}
-                        onClick={() => setQuery(tag)}
-                        className="
-                          flex items-center justify-between px-4 py-3 rounded-lg 
-                          bg-white/[0.02] border border-white/5 
-                          text-xs text-white/60 hover:text-white hover:bg-white/5 hover:border-white/10 
-                          transition-all group
-                        "
-                      >
-                        {tag}
-                        <ArrowRight size={12} className="opacity-30 group-hover:opacity-100 group-hover:translate-x-1 transition-all"/>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+
+              {/* UNIFIED RESULT LIST */}
+              <div className="flex flex-col gap-1 pb-2">
+                {results.map((item, idx) => {
+                  const isSelected = idx === selectedIndex;
+                  return (
+                    <motion.button
+                      key={item.href + idx}
+                      layout
+                      onClick={() => handleSelect(item.href)}
+                      onMouseEnter={() => setSelectedIndex(idx)} 
+                      className={`
+                        relative flex items-center justify-between p-3 rounded-xl w-full text-left transition-all duration-200
+                        ${isSelected 
+                          ? 'bg-white/10 backdrop-blur-md shadow-lg border border-white/5' // APPLE "ACTIVE" STATE (White Glass)
+                          : 'hover:bg-white/5 border border-transparent'
+                        }
+                      `}
+                    >
+                      <div className="flex items-center gap-4 relative z-10">
+                        {/* Icon */}
+                        <div className={`
+                          ${isSelected ? 'text-white' : 'text-white/50'} 
+                          transition-colors duration-200
+                        `}>
+                          {item.icon}
+                        </div>
+                        
+                        {/* Text Content */}
+                        <div>
+                          <h4 className={`
+                            text-[15px] font-medium leading-tight transition-colors duration-200
+                            ${isSelected ? 'text-white' : 'text-white/80'}
+                          `}>
+                            {item.name || item.title}
+                          </h4>
+                          {/* Show category only for real search results, not quick links */}
+                          {item.category && (
+                            <span className={`
+                              text-[12px] font-medium mt-0.5 block transition-colors duration-200
+                              ${isSelected ? 'text-white/60' : 'text-white/30'}
+                            `}>
+                              {item.category}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Enter/Action Arrow */}
+                      <div className={`
+                        transition-all duration-200 flex items-center gap-2
+                        ${isSelected ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}
+                      `}>
+                        {isSelected && (
+                          <span className="text-[10px] font-medium text-white/50 mr-1">
+                            Open
+                          </span>
+                        )}
+                        <CornerDownLeft size={16} className="text-white" />
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
             </div>
+            
+            {/* Footer / Hint - Styled like Keyboard Keys */}
+            <div className="bg-white/5 p-2 px-4 flex items-center justify-between border-t border-white/5">
+               <div className="flex gap-4">
+                  <span className="text-[10px] text-white/40 flex items-center gap-1.5 font-medium">
+                    <span className="bg-white/10 border border-white/5 px-1.5 py-0.5 rounded-md text-white/70 shadow-sm">↑</span>
+                    <span className="bg-white/10 border border-white/5 px-1.5 py-0.5 rounded-md text-white/70 shadow-sm">↓</span>
+                    to navigate
+                  </span>
+                  <span className="text-[10px] text-white/40 flex items-center gap-1.5 font-medium">
+                    <span className="bg-white/10 border border-white/5 px-1.5 py-0.5 rounded-md text-white/70 shadow-sm">↵</span>
+                    to select
+                  </span>
+               </div>
+            </div>
+            
           </motion.div>
         </motion.div>
       )}
