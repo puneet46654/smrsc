@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Link from 'next/link';
 import { Instagram, Linkedin, Mail, Phone } from 'lucide-react';
 
 const Footer = () => {
@@ -11,8 +12,7 @@ const Footer = () => {
     fontSize: '14px',
     fontStyle: 'normal',
     fontWeight: 300,
-    lineHeight: '32px', /* 228.571% */
-    // Moved 'width' to className for responsiveness
+    lineHeight: '32px',
   };
 
   const linkStyle = {
@@ -23,6 +23,13 @@ const Footer = () => {
     fontWeight: 500,
     lineHeight: '32px',
     cursor: 'pointer',
+  };
+
+  // Style for disabled links
+  const disabledLinkStyle = {
+    ...linkStyle,
+    cursor: 'not-allowed',
+    color: '#9CA3AF', // Gray color to indicate disabled state
   };
 
   const bottomLinkStyle = {
@@ -46,10 +53,6 @@ const Footer = () => {
   };
 
   return (
-    // UPDATED PADDING: 
-    // - pt-12 (Mobile) -> lg:pt-[100px] (Desktop)
-    // - pb-[32px] (Bottom)
-    // - px-6 (Mobile) -> lg:px-[270px] (Desktop)
     <footer className="w-full pt-12 lg:pt-[100px] pb-[32px] px-6 lg:px-[270px] border-t border-white/10">
       
       {/* Font Imports */}
@@ -60,22 +63,20 @@ const Footer = () => {
       <div className="w-full mx-auto flex flex-col">
         
         {/* === TOP SECTION === */}
-        {/* Mobile: Flex-col (stacked), Desktop: Flex-row (side-by-side) */}
-        {/* Adjusted gap-12 to gap-10 for mobile to tighten spacing */}
         <div className="flex flex-col lg:flex-row justify-between items-start gap-10 lg:gap-0 mb-16">
           
           {/* 1. Logo Column */}
-          {/* Changed mr-12 to lg:mr-12 to remove right margin on mobile */}
           <div className="flex-shrink-0 lg:mr-12">
-            <img 
-              src="/logos/header.png" 
-              alt="SMRSC Logo" 
-              className="w-[120px] h-auto brightness-200"
-            />
+            <Link href="/">
+              <img 
+                src="/logos/header.png" 
+                alt="SMRSC Logo" 
+                className="w-[120px] h-auto brightness-200 cursor-pointer"
+              />
+            </Link>
           </div>
 
           {/* 2. Address Column */}
-          {/* Added className w-full lg:w-[394px] to handle responsive width */}
           <div style={addressStyle} className="lg:mr-auto w-full lg:w-[394px]">
             <p>Sudhir Srivastava Innovations Pvt. Ltd. (R&D HQ – India)</p>
             <p>404-405, 3rd Floor, iLabs Center, Udyog Vihar, Phase III, Gurugram, Haryana, India – 122016</p>
@@ -84,26 +85,49 @@ const Footer = () => {
             <p>Web: www.ssinnovations.com</p>
           </div>
 
-          {/* MOBILE FIX: Wrapped Links in a container.
-             - Mobile: flex-row gap-20 (side-by-side links)
-             - Desktop: lg:contents (Unwraps the div, children become direct siblings of main container, preserving original desktop layout)
-          */}
           <div className="flex flex-row w-full lg:w-auto justify-start gap-20 lg:gap-0 lg:contents">
             
             {/* 3. Links Column 1 */}
-            {/* Changed mr-20 to lg:mr-20 */}
             <div className="flex flex-col gap-1 lg:mr-20">
-              <a style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">About SMRSC</a>
-              <a style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">Explore Event</a>
-              <a style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">Venue</a>
-              <a style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">Brochure</a>
+              <Link href="/about" style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">
+                About SMRSC
+              </Link>
+              
+              <Link href="/explore" style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">
+                Explore Event
+              </Link>
+              
+              {/* UPDATED: Venue Link points to /visit/venue */}
+              <Link href="/visit/venue" style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">
+                Venue
+              </Link>
+              
+              <Link href="#" style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">
+                Brochure
+              </Link>
             </div>
 
             {/* 4. Links Column 2 */}
             <div className="flex flex-col gap-1">
-              <a style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">Media</a>
-              <a style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">Register now</a>
-              <a style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">Contact us</a>
+              <Link href="/media" style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">
+                Media
+              </Link>
+              
+              {/* UPDATED: Register Now blocked with hover effect */}
+              <div className="relative group w-fit">
+                <span style={disabledLinkStyle}>
+                  Register now
+                </span>
+                
+                {/* Hover Tooltip "Coming Soon" */}
+                <span className="absolute -top-8 left-0 w-max px-2 py-1 bg-white text-black text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none transform translate-y-2 group-hover:translate-y-0">
+                  Coming Soon
+                </span>
+              </div>
+              
+              <Link href="/contactus" style={linkStyle} className="hover:text-[#E3F5F6] transition-colors">
+                Contact us
+              </Link>
             </div>
 
           </div>
@@ -119,7 +143,7 @@ const Footer = () => {
           {/* Social Icons */}
           <div className="flex items-center gap-4">
             <a href="#" className="text-white hover:text-[#E3F5F6] transition-colors">
-               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231h0.001zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z" />
               </svg>
             </a>
@@ -131,15 +155,15 @@ const Footer = () => {
 
           {/* Legal Links */}
           <div className="flex flex-wrap justify-center gap-2 md:gap-6 text-center">
-             <span style={bottomLinkStyle} className="hover:text-white">Cookies</span>
+             <Link href="#" style={bottomLinkStyle} className="hover:text-white">Cookies</Link>
              <span style={bottomLinkStyle}>|</span>
-             <span style={bottomLinkStyle} className="hover:text-white">Privacy Policy</span>
+             <Link href="#" style={bottomLinkStyle} className="hover:text-white">Privacy Policy</Link>
              <span style={bottomLinkStyle}>|</span>
-             <span style={bottomLinkStyle} className="hover:text-white">Contact us</span>
+             <Link href="/contactus" style={bottomLinkStyle} className="hover:text-white">Contact us</Link>
              <span style={bottomLinkStyle}>|</span>
-             <span style={bottomLinkStyle} className="hover:text-white">Terms of use</span>
+             <Link href="#" style={bottomLinkStyle} className="hover:text-white">Terms of use</Link>
              <span style={bottomLinkStyle}>|</span>
-             <span style={bottomLinkStyle} className="hover:text-white">Sitemap</span>
+             <Link href="#" style={bottomLinkStyle} className="hover:text-white">Sitemap</Link>
           </div>
         </div>
 
